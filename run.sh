@@ -1,3 +1,4 @@
+#!/bin/bash
 # run.sh : code_swarm launching script
 # need the config file as first parameter
 
@@ -47,14 +48,25 @@ if [ ! -f $code_swarm_jar ]; then
     fi
 fi
 
+CLASSPATH_COMMON=dist/code_swarm.jar:lib/gluegen-rt.jar:lib/jogl.jar:lib/core.jar:lib/opengl.jar:lib/xml.jar:lib/vecmath.jar
+CS_CLASSPATH=
+CS_LIBPATH=
+
+platform=$(uname)
+if [ "${platform}" == "Linux" ]; then
+    CS_CLASSPATH=${CLASSPATH_COMMON}:lib/jogl-natives-linux-i586.jar:.
+    CS_LIBPATH=lib/linux-x86_64
+elif [ "${platform}" == "Darwin" ]; then
+    CS_CLASSPATH=${CLASSPATH_COMMON}:lib/jogl-natives-macosx-universal.jar:.
+    CS_LIBPATH=lib
+fi
+
 # running
-#if java -Xmx1000m -classpath dist/code_swarm.jar:lib/core.jar:lib/xml.jar:lib/vecmath.jar:. code_swarm $params; then
-#if java -Xmx1000m -classpath dist/code_swarm.jar:lib/gluegen-rt.jar:lib/jogl.jar:lib/jogl-natives-macosx-universal.jar:lib/core.jar:lib/opengl.jar:lib/xml.jar:lib/vecmath.jar:. code_swarm $params; then
-if java -Xmx1000m -classpath dist/code_swarm.jar:lib/gluegen-rt.jar:lib/jogl.jar:lib/jogl-natives-macosx-universal.jar:lib/core.jar:lib/opengl.jar:lib/xml.jar:lib/vecmath.jar:. -Djava.library.path=lib/ code_swarm $params; then
-# always on error due to no "exit buton" on rendering window
+if java -Xmx1000m -classpath ${CS_CLASSPATH} -Djava.library.path=${CS_LIBPATH} code_swarm $params; then
+    # always on error due to no "exit buton" on rendering window
     echo "bye"
-#    echo -n "error, press a key to exit"
-#    read key
+    #    echo -n "error, press a key to exit"
+    #    read key
 else
     echo "bye"
 fi
