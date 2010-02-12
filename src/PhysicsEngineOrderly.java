@@ -68,10 +68,10 @@ public class PhysicsEngineOrderly extends PhysicsEngine
         delta.sub(pNode.mPosition, n.mPosition);
         if (delta.lengthSquared() < MIN_DISTANCE_SQR) {
           // This calculation gives a 'stiff spring' affect
-          //float toMove = ((float)Math.sqrt(MIN_DISTANCE_SQR) - delta.length()) / 10.0f;
+          float toMove = ((float)Math.sqrt(MIN_DISTANCE_SQR) - delta.length()) / 10.0f;
 
           // This calculation gives a much nicer flow
-          float toMove = 0.03f;
+          //float toMove = 0.03f;
           delta.scale((1 / delta.length()) * toMove);
 
           n.mPosition.sub(delta);
